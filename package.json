@@ -4,7 +4,16 @@
   "description": "A dev tool which can simplify operation for Android developer~",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron src/main.js"
+    "start": "electron src/main.js",
+    "build-osx": "electron-builder build --mac"
+  },
+  "build": {
+    "productName": "EasyDev",
+    "asar": true,
+    "appId": "top.losttime.easydev",
+    "directories": {
+      "output": "dist"
+    }
   },
   "repository": {
     "type": "git",
@@ -22,8 +31,11 @@
   },
   "homepage": "https://github.com/JosephusZhou/easy-dev",
   "dependencies": {
-    "electron": "^4.0.6",
     "nconf": "^0.10.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "electron": "^4.0.6",
+    "asar": "^1.0.0",
+    "electron-builder": "^20.38.5"
+  }
 }
