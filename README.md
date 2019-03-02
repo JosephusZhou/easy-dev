@@ -10,7 +10,7 @@
 [![Build Status](https://img.shields.io/github/stars/JosephusZhou/easy-dev.svg)](https://github.com/JosephusZhou/easy-dev)
 [![Build Status](https://img.shields.io/github/forks/JosephusZhou/easy-dev.svg)](https://github.com/JosephusZhou/easy-dev)
 
-
+![Example](https://github.com/JosephusZhou/easy-dev/blob/master/images/demo.png)
 
 ## Features
 
