@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <link href="../styles/mainWin.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Easy Dev</title>
+</head>
+
+<body class="page">
+<div class="main-content">
+    <section>
+        <ul>
+            <li class="li-title">
+                <h2>Android 项目根目录</h2>
+            </li>
+            <li class="li-content">
+                <button id="project-path-btn" class="btn">选择</button>
+                <br>
+                <span id="project-path-text">File Path...</span>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <div id="file-holder-div" class="dropify-wrapper">
+            <div id="file-message-div" class="dropify-message">
+                点击或将文件拖拽到此区域处理
+            </div>
+        </div>
+    </section>
+    <section>
+        <ul>
+            <li class="li-title">
+                <p id="original-name-text">原始文件名：尚未选择文件...</p>
+            </li>
+            <li class="li-content">
+                <p>
+                    <input type="text" name="new-name-input" id="new-name-input"
+                           placeholder="请输入新文件名"/>
+                </p>
+            </li>
+            <li class="li-content">
+                <p>
+                    <button id="commit-btn" class="btn">修改并拷贝文件到 Android 项目</button>
+                </p>
+            </li>
+            <li class="li-content">
+                <p id="commit-result-text"></p>
+            </li>
+        </ul>
+    </section>
+</div>
+
+<script>
+    const Path = require('path');
+    const fs = require('fs');
+    const {dialog} = require('electron').remote;
+    const Common = require('../../common');
+    const AppConfig = require('../../configuration');
+
+    const projectPathBtn = $('project-path-btn');
+    const projectPathText = $('project-path-text');
+    const fileHolderDiv = $('file-holder-div');
+    const fileMessageDiv = $("file-message-div");
+    const originalNameText = $("original-name-text");
+    const newNameInput = $("new-name-input");
+    const commitBtn = $("commit-btn");
+    const commitResultText = $("commit-result-text");
+
+    const dirList = [Common.XHDPI, Common.XXHDPI, Common.XXXHDPI];
+    // 项目根目录路径
+    let projectRootPath = AppConfig.readSettings(Common.PRPATH);
+    // 待处理的资源文件列表，包括 xhdpi——xxxhdpi
+    let originalList = {};
+    let originalName = '';
+    let extName = '';
+    let newList = {};
+
+    setCaches();
+    setListeners();
+
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    function setCaches() {
+        if (projectRootPath != null && projectRootPath != "") {
+            projectPathText.innerHTML = projectRootPath;
+        }
+    }
+
+    function setListeners() {
+        projectPathBtn.addEventListener('click', (event) => {
+            dialog.showOpenDialog({
+                properties: ['openDirectory']
+            }, function (files) {
+                if (files) {
+                    projectRootPath = files.toString();
+                    projectPathText.innerHTML = projectRootPath;
+                    AppConfig.saveSettings(Common.PRPATH, projectRootPath);
+                }
+            });
+        });
+
+        fileHolderDiv.ondragover = () => {
+            return false;
+        }
+        fileHolderDiv.ondragleave = fileHolderDiv.ondragend = () => {
+            return false;
+        }
+        fileHolderDiv.ondrop = (e) => {
+            e.preventDefault()
+            for (let f of e.dataTransfer.files) {
+                handleSelectedFiles(f.path);
+            }
+            return false;
+        }
+
+        commitBtn.addEventListener('click', (event) => {
+            commit();
+        });
+    }
+
+    function handleSelectedFiles(path) {
+        originalName = Path.basename(path);
+        extName = Path.extname(path);
+
+        let list = {};
+        if (path.indexOf(Common.XXXHDPI) != -1) {
+            list[Common.XHDPI] = path.replace(Common.XXXHDPI, Common.XHDPI);
+            list[Common.XXHDPI] = path.replace(Common.XXXHDPI, Common.XXHDPI);
+            list[Common.XXXHDPI] = path;
+        } else if (path.indexOf(Common.XXHDPI) != -1) {
+            list[Common.XHDPI] = path.replace(Common.XXHDPI, Common.XHDPI);
+            list[Common.XXHDPI] = path;
+            list[Common.XXXHDPI] = path.replace(Common.XXHDPI, Common.XXXHDPI);
+        } else if (path.indexOf(Common.XHDPI) != -1) {
+            list[Common.XHDPI] = path;
+            list[Common.XXHDPI] = path.replace(Common.XHDPI, Common.XXHDPI);
+            list[Common.XXXHDPI] = path.replace(Common.XHDPI, Common.XXXHDPI);
+        }
+
+        originalList = {};
+        for (let i in dirList) {
+            if (fs.existsSync(list[dirList[i]])) originalList[dirList[i]] = list[dirList[i]];
+        }
+
+        let innerHtml = '已选择文件：<br><br>';
+        for (let i in originalList) {
+            innerHtml += originalList[i];
+            innerHtml += '<br><br>';
+        }
+        fileMessageDiv.innerHTML = innerHtml;
+        originalNameText.innerHTML = "原始文件名：" + originalName + ", 扩展名：" + extName;
+    }
+
+    function commit() {
+        commitResultText.innerHTML = '';
+        if (projectRootPath == null || projectRootPath == "") {
+            alert("Android 项目路径不能为空！");
+            return;
+        }
+        if (originalList == null || Object.keys(originalList).length == 0) {
+            alert("请先选择需要拷贝的文件！");
+            return;
+        }
+        if (extName == null || extName == "") {
+            alert("扩展名不能为空！");
+            return;
+        }
+        let newName = newNameInput.value;
+        if (newName == null || newName == "") {
+            alert("文件名不能为空！");
+            return;
+        }
+        newList = {};
+        let exist = false;
+        for (i in originalList) {
+            newList[i] = Path.join(projectRootPath.toString(), Common.SUBPATH + i, newName + extName);
+            if (fs.existsSync(newList[i])) exist = true;
+        }
+        if (exist) {
+            let result = confirm('Android 项目中已存在相同命名文件，是否全部替换');
+            if (result) copyOrRewrite(newList);
+        } else {
+            copyOrRewrite(newList);
+        }
+    }
+
+    function copyOrRewrite(newList) {
+        for (i in originalList) {
+            try {
+                fs.writeFileSync(newList[i], fs.readFileSync(originalList[i]));
+
+                var html = commitResultText.innerHTML;
+                html += "拷贝成功：" + newList[i] + "<br>";
+                commitResultText.innerHTML = html;
+            } catch (err) {
+                alert(err.toString());
+                return;
+            }
+        }
+    }
+
+</script>
+</body>
+
+</html>

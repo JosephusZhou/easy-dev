@@ -1,0 +1,11 @@
+.DS_Store
+/dist
+npm-debug.log*
+.idea
+*.iml
+
+# Dependency directories
+node_modules
+
+*.sublime-project
+*.sublime-workspace

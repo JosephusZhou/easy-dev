@@ -1,0 +1,29 @@
+{
+  "name": "easy-dev",
+  "version": "0.0.1",
+  "description": "A dev tool which can simplify operation for Android developer~",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JosephusZhou/easy-dev"
+  },
+  "keywords": [
+    "Android",
+    "res",
+    "tool"
+  ],
+  "author": "JosephusZhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JosephusZhou/easy-dev/issues"
+  },
+  "homepage": "https://github.com/JosephusZhou/easy-dev",
+  "dependencies": {
+    "electron": "^4.0.6",
+    "nconf": "^0.10.0"
+  },
+  "devDependencies": {}
+}
