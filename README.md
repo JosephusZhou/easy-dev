@@ -32,7 +32,7 @@ npm install && npm start
 To pack into an app, simply type one of these:
 
 ``` shell
-npm run 
+npm run build-osx
 ```
 
 #### [Download Released App](https://github.com/JosephusZhou/easy-dev/releases)
