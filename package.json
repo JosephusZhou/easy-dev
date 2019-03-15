@@ -2,9 +2,9 @@
   "name": "easy-dev",
   "version": "0.0.1",
   "description": "A dev tool which can simplify operation for Android developer~",
-  "main": "src/main.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "electron src/main.js",
+    "start": "electron src/index.js",
     "build-osx": "electron-builder build --mac"
   },
   "build": {

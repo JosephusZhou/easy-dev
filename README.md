@@ -16,6 +16,10 @@
 
 - Simplify the operation of copying multiple different dpi resource files
 
+## To-do-list
+
+- Add tinypng image compression support
+
 ## How To Use
 
 To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](https://www.npmjs.com/)) installed on your computer. From your command line:
