@@ -14,8 +14,8 @@ class MainWindow {
   createSettingsWindow() {
     this.browserWindow = new BrowserWindow({
       width: 1000,
-      height: 700,
-      resizable: false,
+      height: 800,
+      resizable: true,
       fullscreenable: false,
       show: false,
       frame: true,

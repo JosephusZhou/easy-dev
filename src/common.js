@@ -4,8 +4,9 @@ class Common {
 
 }
 
-Common.PRPATH = 'project-root-path';
-Common.SUBPATH = '/app/src/main/res/mipmap-';
+Common.P_R_PATH = 'project-root-path';
+Common.RES_SUB_PATH = '/app/src/main/res';
+Common.SUB_PATH = '/app/src/main/res/mipmap-';
 
 Common.XHDPI = 'xhdpi';
 Common.XXHDPI = 'xxhdpi';

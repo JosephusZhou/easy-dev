@@ -54,6 +54,7 @@
 <script>
     const Path = require('path');
     const fs = require('fs');
+    const exec = require('child_process').exec;
     const {dialog} = require('electron').remote;
     const Common = require('../../common');
     const AppConfig = require('../../configuration');
@@ -69,7 +70,8 @@
 
     const dirList = [Common.XHDPI, Common.XXHDPI, Common.XXXHDPI];
     // 项目根目录路径
-    let projectRootPath = AppConfig.readSettings(Common.PRPATH);
+    let projectRootPath = AppConfig.readSettings(Common.P_R_PATH);
+    let projectResPath = '';
     // 待处理的资源文件列表，包括 xhdpi——xxxhdpi
     let originalList = {};
     let originalName = '';
@@ -86,7 +88,12 @@
     function setCaches() {
         if (projectRootPath != null && projectRootPath != "") {
             projectPathText.innerHTML = projectRootPath;
+            handleProjectResPath();
         }
+    }
+
+    function handleProjectResPath() {
+        projectResPath = Path.join(projectRootPath.toString(), Common.RES_SUB_PATH);
     }
 
     function setListeners() {
@@ -96,8 +103,9 @@
             }, function (files) {
                 if (files) {
                     projectRootPath = files.toString();
+                    handleProjectResPath();
                     projectPathText.innerHTML = projectRootPath;
-                    AppConfig.saveSettings(Common.PRPATH, projectRootPath);
+                    AppConfig.saveSettings(Common.P_R_PATH, projectRootPath);
                 }
             });
         });
@@ -176,7 +184,7 @@
         newList = {};
         let exist = false;
         for (i in originalList) {
-            newList[i] = Path.join(projectRootPath.toString(), Common.SUBPATH + i, newName + extName);
+            newList[i] = Path.join(projectRootPath.toString(), Common.SUB_PATH + i, newName + extName);
             if (fs.existsSync(newList[i])) exist = true;
         }
         if (exist) {
@@ -193,13 +201,29 @@
                 fs.writeFileSync(newList[i], fs.readFileSync(originalList[i]));
 
                 var html = commitResultText.innerHTML;
-                html += "拷贝成功：" + newList[i] + "<br>";
+                html += "拷贝成功：" + newList[i] + "<br><br>";
                 commitResultText.innerHTML = html;
             } catch (err) {
                 alert(err.toString());
                 return;
             }
         }
+        execGitAdd();
+    }
+
+    function execGitAdd() {
+        var shellStr = 'cd ' + projectResPath + ' && git add *';
+        exec(shellStr, function (err, stdout, stderr) {
+            var resStr = '';
+            if (err) {
+                resStr = "Git Add * 执行失败，" + err.toString();
+            } else {
+                resStr = 'Git Add * 执行成功。';
+            }
+            var html = commitResultText.innerHTML;
+            html += resStr;
+            commitResultText.innerHTML = html;
+        });
     }
 
 </script>
