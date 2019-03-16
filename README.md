@@ -16,7 +16,9 @@
 
 - Simplify the operation of copying multiple different dpi resource files
 
-## To-do-list
+## Developing
+
+- Refactoring the UI interface with React (Learning React now)
 
 - Add tinypng image compression support
 
