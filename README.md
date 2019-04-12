@@ -12,15 +12,28 @@
 
 ![Example](https://github.com/JosephusZhou/easy-dev/blob/master/images/demo.png)
 
+## Change logs
+
+* 0.0.3
+    * Fix a bug that cannot use edit shortcuts under MacOS
+    
+* 0.0.2
+    * Adjust the initial size of the window
+    * Optimization constant naming
+    * Automatically run the "git add *" command after copying the files
+
+* 0.0.1
+    * First version
+
 ## Features
 
-- Simplify the operation of copying multiple different dpi resource files
+* Simplify the operation of copying multiple different dpi resource files
 
 ## Developing
 
-- Refactoring the UI interface with React (Learning React now)
+* Refactoring the UI interface with React (Learning React now)
 
-- Add tinypng image compression support
+* Add tinypng image compression support
 
 ## How To Use
 

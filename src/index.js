@@ -1,51 +1,54 @@
 'use strict';
 
-const {app, ipcMain} = require('electron');
+const {app, ipcMain, Menu} = require('electron');
+
+const MenuHandler = require('./menuhandler');
 
 const MainWindow = require('./windows/controllers/mainWin');
 
 class EasyDev {
-    constructor() {
-        this.mainWindow = null;
-    }
+	constructor() {
+		this.mainWindow = null;
+	}
 
-    init() {
-        if (this.checkInstance()) {
-            this.initApp();
-            this.initIPC();
-        } else {
-            app.quit();
-        }
-    }
+	init() {
+		if (this.checkInstance()) {
+			this.initApp();
+			this.initIPC();
+		} else {
+			app.quit();
+		}
+	}
 
-    checkInstance() {
-        return true;
-    }
+	checkInstance() {
+		return true;
+	}
 
-    initApp() {
-        app.on('ready', () => {
-            this.createMainWindow();
-        });
+	initApp() {
+		app.on('ready', () => {
+			this.createMainWindow();
+			Menu.setApplicationMenu(MenuHandler.getMainMenu())
+		});
 
-        app.on('activate', () => {
-            if (this.mainWindow) {
-                this.mainWindow.show();
-            } else {
-                this.createMainWindow();
-                this.mainWindow.show();
-            }
-        });
-    };
+		app.on('activate', () => {
+			if (this.mainWindow) {
+				this.mainWindow.show();
+			} else {
+				this.createMainWindow();
+				this.mainWindow.show();
+			}
+		});
+	};
 
-    initIPC() {
-        ipcMain.on('log', (event, message) => {
-            console.log(message);
-        });
-    };
+	initIPC() {
+		ipcMain.on('log', (event, message) => {
+			console.log(message);
+		});
+	};
 
-    createMainWindow() {
-        this.mainWindow = new MainWindow();
-    }
+	createMainWindow() {
+		this.mainWindow = new MainWindow();
+	}
 
 }
 
