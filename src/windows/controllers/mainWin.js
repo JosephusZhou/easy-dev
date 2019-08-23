@@ -19,7 +19,10 @@ class MainWindow {
       fullscreenable: false,
       show: false,
       frame: true,
-      alwaysOnTop: false
+      alwaysOnTop: false,
+      webPreferences: {
+        nodeIntegration: true
+      }
     });
 
     this.initWindowEvents();
