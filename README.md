@@ -14,14 +14,15 @@
 
 ## Change logs
 
+* 0.0.4
+    * Update Electron Version
+    * Add the function for QrCode decode
 * 0.0.3
     * Fix a bug that cannot use edit shortcuts under MacOS
-    
 * 0.0.2
     * Adjust the initial size of the window
     * Optimization constant naming
     * Automatically run the "git add *" command after copying the files
-
 * 0.0.1
     * First version
 
