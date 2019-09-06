@@ -5,10 +5,12 @@ const {app, ipcMain, Menu} = require('electron');
 const MenuHandler = require('./menuhandler');
 
 const MainWindow = require('./windows/controllers/mainWin');
+const QrCodeWindow = require('./windows/controllers/qrCodeWin');
 
 class EasyDev {
 	constructor() {
 		this.mainWindow = null;
+		this.qrCodeWindow = null;
 	}
 
 	init() {
@@ -41,13 +43,24 @@ class EasyDev {
 	};
 
 	initIPC() {
-		ipcMain.on('log', (event, message) => {
-			console.log(message);
+		ipcMain.on('menu', (event, message) => {
+			if (event == 'qrCode') {
+				if (this.qrCodeWindow) {
+					this.qrCodeWindow.show();
+				} else {
+					this.createQrCodeWindow();
+					this.qrCodeWindow.show();
+				}
+			}
 		});
 	};
 
 	createMainWindow() {
 		this.mainWindow = new MainWindow();
+	}
+
+	createQrCodeWindow() {
+		this.qrCodeWindow = new QrCodeWindow();
 	}
 
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <link href="../styles/qrCodeWin.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Easy Dev-Parse QrCode</title>
+</head>
+
+<body class="page">
+<div class="main-content">
+    <section>
+        <ul>
+            <li class="li-title">
+                <h2>解析二维码</h2>
+                将图片复制到剪贴板，点击按钮进行解析
+            </li>
+            <li class="li-content">
+                <button id="parse-btn" class="btn">解析</button>
+                <p id="parse-text"></p>
+                <img id="parse-img" />
+            </li>
+        </ul>
+    </section>
+</div>
+
+<script>
+    const {clipboard} = require('electron').remote;
+    const jsQR = require('jsqr');
+
+    const parseButton = $('parse-btn');
+    const parseText = $('parse-text');
+    const parseImg = $('parse-img');
+
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    setListeners();
+
+    function setListeners() {
+	    parseButton.addEventListener('click', (event) => {
+            let image = clipboard.readImage();
+            if (!image.isEmpty()) {
+	            parseImg.src = image.toDataURL();
+	            let code = jsQR(image.getBitmap(), image.getSize().width, image.getSize().height);
+	            if (code) {
+                    parseText.innerHTML = code.data;
+                } else {
+                    parseText.innerHTML = "无效二维码";
+                }
+            }
+	    });
+    }
+
+</script>
+</body>
+
+</html>

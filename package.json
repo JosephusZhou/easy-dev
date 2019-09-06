@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/JosephusZhou/easy-dev",
   "dependencies": {
+    "jsqr": "^1.2.0",
     "nconf": "^0.10.0"
   },
   "devDependencies": {

@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #364854;
+  font-family: "Microsoft Yahei", "微软雅黑", STXihei, "华文细黑", sans-serif;
+  background-color: #F3F3F3;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 5px;
+}
+
+h1 {
+  color: #364854;
+}
+
+section {
+  position: relative;
+  width: 75%;
+  left: 12.5%;
+}
+
+.page {
+  min-width: 500px;
+  min-height: 350px;
+}
+
+.main-content {
+  padding-top: 5px;
+}
+
+.li-title {
+  position: relative;
+}
+
+.li-content {
+  position: relative;
+}
+
+.btn {
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #c9c9c9;
+  font-size: 16px;
+  background: #364854;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  width: auto;
+  min-width: 125px;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+p {
+  word-break:break-word;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
