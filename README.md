@@ -28,6 +28,7 @@
 ## Features
 
 * Simplify the operation of copying multiple different dpi resource files
+* Qr Code Decode, only in macOS App Menu. If you work on Windows OS, please modify `menuhandler.js` and build `exe`.
 
 ## How To Use
 
