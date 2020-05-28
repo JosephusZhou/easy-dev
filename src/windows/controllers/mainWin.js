@@ -14,13 +14,16 @@ class MainWindow {
   createSettingsWindow() {
     this.browserWindow = new BrowserWindow({
       width: 1000,
-      height: 800,
+      height: 2000,
+      minWidth: 1000,
+      minHeight: 2000,
       resizable: true,
       fullscreenable: false,
       show: false,
       frame: true,
       alwaysOnTop: false,
       webPreferences: {
+        enableRemoteModule: true,
         nodeIntegration: true
       }
     });
@@ -37,7 +40,7 @@ class MainWindow {
     });
     this.browserWindow.once('ready-to-show', () => {
       this.browserWindow.show();
-      //this.browserWindow.webContents.openDevTools({mode:'undocked'});
+      this.browserWindow.webContents.openDevTools({mode:'undocked'});
     });
   }
 

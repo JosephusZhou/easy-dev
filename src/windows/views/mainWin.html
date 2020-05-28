@@ -1,232 +1,329 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 
-<head>
-    <link href="../styles/mainWin.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <title>Easy Dev</title>
-</head>
+    <head>
+        <link rel="stylesheet" href="../styles/mainWin.css">
+        <link rel="stylesheet" href="../styles/bulma.0.8.2.min.css">
+        <script defer src="../js/fontawesome.5.3.1.all.js"></script>
+        <meta charset="UTF-8">
+        <title>Android 资源复制简化工具</title>
+    </head>
 
-<body class="page">
-<div class="main-content">
-    <section>
-        <ul>
-            <li class="li-title">
-                <h2>Android 项目根目录</h2>
-            </li>
-            <li class="li-content">
-                <button id="project-path-btn" class="btn">选择</button>
+    <body>
+        <section class="section">
+            <div class="container">
+                <h1 class="title is-4">选择项目资源根目录</h1>
+                <h2 class="subtitle is-6">示例：../Demo/app/src/main/res</h2>
+                <button class="button is-primary" id="btn-project-path">选择目标目录</button>
                 <br>
-                <span id="project-path-text">File Path...</span>
-            </li>
-        </ul>
-    </section>
-    <section>
-        <div id="file-holder-div" class="dropify-wrapper">
-            <div id="file-message-div" class="dropify-message">
-                点击或将文件拖拽到此区域处理
+                <span class="content" id="span-project-path">File Path...</span>
             </div>
-        </div>
-    </section>
-    <section>
-        <ul>
-            <li class="li-title">
-                <p id="original-name-text">原始文件名：尚未选择文件...</p>
-            </li>
-            <li class="li-content">
-                <p>
-                    <input type="text" name="new-name-input" id="new-name-input"
-                           placeholder="请输入新文件名"/>
-                </p>
-            </li>
-            <li class="li-content">
-                <p>
-                    <button id="commit-btn" class="btn">修改并拷贝文件到 Android 项目</button>
-                </p>
-            </li>
-            <li class="li-content">
-                <p id="commit-result-text"></p>
-            </li>
-        </ul>
-    </section>
-</div>
+            <br>
+            <div class="container">
+                <h1 class="title is-4">选择复制配置项</h1>
+                <h2 class="subtitle is-6">可以自由组合</h2>
+                <div class="columns">
+                    <div class="column">
+                        <p class="tag is-primary">选择目标资源目录</p>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-m" type="checkbox">
+                            mipmap-mdpi
+                        </label>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-h" type="checkbox">
+                            mipmap-hdpi
+                        </label>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-xh" type="checkbox" checked="checked">
+                            mipmap-xhdpi
+                        </label>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-xxh" type="checkbox" checked="checked">
+                            mipmap-xxhdpi
+                        </label>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-xxxh" type="checkbox" checked="checked">
+                            mipmap-xxxhdpi
+                        </label>
+                        <br>
+                    </div>
+                    <div class="column">
+                        <p class="tag is-primary">选择目标资源目录前缀</p>
+                        <br>
+                        <div class="control">
+                            <label class="radio">
+                                <input id="rd-no" type="radio" name="answer" checked="checked">
+                                无
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input id="rd-night" type="radio" name="answer">
+                                night
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input id="rd-notnight" type="radio" name="answer" />
+                                notnight
+                            </label>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <p class="tag is-primary">选择目标是否执行命令</p>
+                        <br>
+                        <label class="checkbox">
+                            <input id="cb-gitadd" type="checkbox" checked="checked" />
+                            git add
+                        </label>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="container">
+                <h1 class="title is-4">选择源文件</h1>
+                <h2 class="subtitle is-6">会自动获取同级根目录的所有资源</h2>
+                <div class="dropify-wrapper" id="div-file-holder">
+                    <div class="dropify-message" id="div-file-message">
+                        点击或将文件拖拽到此区域处理
+                    </div>
+                </div>
+                <br>
+                <span class="content" id="span-original-name">原始文件名：尚未选择文件...</span>
+                <br>
+                <span class="content">新文件名：<input class="text-input" type="text"
+                                                  name="input-new-name" id="input-new-name"
+                                                  placeholder="请输入新文件名(留空代表不修改文件名)"/></span>
+            </div>
+            <br>
+            <div class="container">
+                <h1 class="title is-4">复制到目标目录</h1>
+                <h2 class="subtitle is-6">会自动复制多个对应 dpi 的文件</h2>
+                <button class="button is-primary" id="btn-commit">修改并拷贝文件到 Android 项目</button>
+                <p id="p-commit-result"></p>
+            </div>
+        </section>
 
-<script>
-    const Path = require('path');
-    const fs = require('fs');
-    const exec = require('child_process').exec;
-    const {dialog} = require('electron').remote;
-    const Common = require('../../common');
-    const AppConfig = require('../../configuration');
+        <script>
+					const Path = require('path');
+					const fs = require('fs');
+					const exec = require('child_process').exec;
+					const {dialog} = require('electron').remote;
+					const Common = require('../../common');
+					const AppConfig = require('../../configuration');
 
-    const projectPathBtn = $('project-path-btn');
-    const projectPathText = $('project-path-text');
-    const fileHolderDiv = $('file-holder-div');
-    const fileMessageDiv = $("file-message-div");
-    const originalNameText = $("original-name-text");
-    const newNameInput = $("new-name-input");
-    const commitBtn = $("commit-btn");
-    const commitResultText = $("commit-result-text");
+					const projectPathBtn = $('btn-project-path');
+					const projectPathSpan = $('span-project-path');
+					const mCb = $('cb-m');
+					const hCb = $('cb-h');
+					const xhCb = $('cb-xh');
+					const xxhCb = $('cb-xxh');
+					const xxxhCb = $('cb-xxxh');
+					const noRd = $('rd-no');
+					const nightRd = $('rd-night');
+					const notnightRd = $('rd-notnight');
+					const gitaddCb = $('cb-gitadd');
+					const fileHolderDiv = $('div-file-holder');
+					const fileMessageDiv = $("div-file-message");
+					const originalNameSpan = $("span-original-name");
+					const newNameInput = $("input-new-name");
+					const commitBtn = $("btn-commit");
+					const commitResultP = $("p-commit-result");
+					let checkedList = [mCb, hCb, xhCb, xxhCb, xxxhCb];
+					let rdList = [noRd, nightRd, notnightRd];
 
-    const dirList = [Common.XHDPI, Common.XXHDPI, Common.XXXHDPI];
-    // 项目根目录路径
-    let projectRootPath = AppConfig.readSettings(Common.P_R_PATH);
-    let projectResPath = '';
-    // 待处理的资源文件列表，包括 xhdpi——xxxhdpi
-    let originalList = {};
-    let originalName = '';
-    let extName = '';
-    let newList = {};
+					const dpiList = [Common.MDPI, Common.HDPI, Common.XHDPI, Common.XXHDPI, Common.XXXHDPI];
+					const nightList = ['', Common.NIGHT, Common.NOTNIGHT];
+					// 项目根目录路径
+					let projectResPath = AppConfig.readSettings(Common.CONFIG_PATH);
+					// 待处理的资源文件列表
+					let originalList = {};
+					let originalName = '';
+					let extName = '';
+					let newList = {};
 
-    setCaches();
-    setListeners();
+					setCaches();
+					setListeners();
 
-    function $(id) {
-        return document.getElementById(id);
-    }
+					function $(id) {
+						return document.getElementById(id);
+					}
 
-    function setCaches() {
-        if (projectRootPath != null && projectRootPath != "") {
-            projectPathText.innerHTML = projectRootPath;
-            handleProjectResPath();
-        }
-    }
+					function setCaches() {
+						if (projectResPath != null && projectResPath != "") {
+							projectPathSpan.innerHTML = projectResPath;
+						}
+					}
 
-    function handleProjectResPath() {
-        projectResPath = Path.join(projectRootPath.toString(), Common.RES_SUB_PATH);
-    }
+					function setListeners() {
+						projectPathBtn.addEventListener('click', (event) => {
+							dialog.showOpenDialog({
+								properties: ['openDirectory']
+							}).then(result => {
+								projectResPath = result.filePaths.toString();
+								projectPathSpan.innerHTML = projectResPath;
+								AppConfig.saveSettings(Common.CONFIG_PATH, projectResPath);
+							}).catch(err => {
+								alert(err);
+								return;
+							});
+						});
 
-    function setListeners() {
-        projectPathBtn.addEventListener('click', (event) => {
-            dialog.showOpenDialog({
-                properties: ['openDirectory']
-            }, function (files) {
-                if (files) {
-                    projectRootPath = files.toString();
-                    handleProjectResPath();
-                    projectPathText.innerHTML = projectRootPath;
-                    AppConfig.saveSettings(Common.P_R_PATH, projectRootPath);
-                }
-            });
-        });
+						fileHolderDiv.ondragover = () => {
+							return false;
+						}
+						fileHolderDiv.ondragleave = fileHolderDiv.ondragend = () => {
+							return false;
+						}
+						fileHolderDiv.ondrop = (e) => {
+							e.preventDefault()
+							for (let f of e.dataTransfer.files) {
+								handleSelectedFiles(f.path);
+							}
+							return false;
+						}
+						fileHolderDiv.addEventListener('click', (event) => {
+							dialog.showOpenDialog({
+								properties: ['openFile']
+							}).then(result => {
+								handleSelectedFiles(result.filePaths.toString());
+							}).catch(err => {
+								alert(err);
+								return;
+							});
+						});
 
-        fileHolderDiv.ondragover = () => {
-            return false;
-        }
-        fileHolderDiv.ondragleave = fileHolderDiv.ondragend = () => {
-            return false;
-        }
-        fileHolderDiv.ondrop = (e) => {
-            e.preventDefault()
-            for (let f of e.dataTransfer.files) {
-                handleSelectedFiles(f.path);
-            }
-            return false;
-        }
+						commitBtn.addEventListener('click', (event) => {
+							commit();
+						});
+					}
 
-        commitBtn.addEventListener('click', (event) => {
-            commit();
-        });
-    }
+					function handleSelectedFiles(path) {
+						originalName = Path.basename(path);
+						extName = Path.extname(path);
 
-    function handleSelectedFiles(path) {
-        originalName = Path.basename(path);
-        extName = Path.extname(path);
+						let list = {};
+						for (let i in dpiList) {
+							if (path.indexOf(dpiList[i]) != -1) {
+								for (let j in dpiList) {
+									if (j != i) {
+										list[dpiList[j]] = path.replace(dpiList[i], dpiList[j]);
+									} else {
+										list[dpiList[i]] = path;
+									}
+								}
+							}
+						}
 
-        let list = {};
-        if (path.indexOf(Common.XXXHDPI) != -1) {
-            list[Common.XHDPI] = path.replace(Common.XXXHDPI, Common.XHDPI);
-            list[Common.XXHDPI] = path.replace(Common.XXXHDPI, Common.XXHDPI);
-            list[Common.XXXHDPI] = path;
-        } else if (path.indexOf(Common.XXHDPI) != -1) {
-            list[Common.XHDPI] = path.replace(Common.XXHDPI, Common.XHDPI);
-            list[Common.XXHDPI] = path;
-            list[Common.XXXHDPI] = path.replace(Common.XXHDPI, Common.XXXHDPI);
-        } else if (path.indexOf(Common.XHDPI) != -1) {
-            list[Common.XHDPI] = path;
-            list[Common.XXHDPI] = path.replace(Common.XHDPI, Common.XXHDPI);
-            list[Common.XXXHDPI] = path.replace(Common.XHDPI, Common.XXXHDPI);
-        }
+						originalList = {};
+						for (let i in dpiList) {
+							if (fs.existsSync(list[dpiList[i]])) originalList[dpiList[i]] = list[dpiList[i]];
+						}
 
-        originalList = {};
-        for (let i in dirList) {
-            if (fs.existsSync(list[dirList[i]])) originalList[dirList[i]] = list[dirList[i]];
-        }
+						let innerHtml = '已选择文件：<br><br>';
+						for (let i in originalList) {
+							innerHtml += originalList[i];
+							innerHtml += '<br><br>';
+						}
+						fileMessageDiv.innerHTML = innerHtml;
+						originalNameSpan.innerHTML = "原始文件名：" + originalName.replace(extName, "") + ", 扩展名：" + extName;
+					}
 
-        let innerHtml = '已选择文件：<br><br>';
-        for (let i in originalList) {
-            innerHtml += originalList[i];
-            innerHtml += '<br><br>';
-        }
-        fileMessageDiv.innerHTML = innerHtml;
-        originalNameText.innerHTML = "原始文件名：" + originalName + ", 扩展名：" + extName;
-    }
+					function commit() {
+						commitResultP.innerHTML = '';
+						if (projectResPath == null || projectResPath == "") {
+							alert("Android 项目路径不能为空！");
+							return;
+						}
+						if (originalList == null || Object.keys(originalList).length == 0) {
+							alert("请先选择需要拷贝的文件！");
+							return;
+						}
+						if (extName == null || extName == "") {
+							alert("扩展名不能为空！");
+							return;
+						}
+						let checkedDpiList = [];
+						for (let i in checkedList) {
+							if (checkedList[i].checked) {
+								if (!originalList[dpiList[i]]) {
+									alert("源文件不存在 " + dpiList[i] + " 对应的文件");
+									return;
+								}
+								checkedDpiList.push(dpiList[i]);
+							}
+						}
+						let night = '';
+						for (let i in rdList) {
+							if (rdList[i].checked) {
+								night = nightList[i];
+								break;
+							}
+						}
 
-    function commit() {
-        commitResultText.innerHTML = '';
-        if (projectRootPath == null || projectRootPath == "") {
-            alert("Android 项目路径不能为空！");
-            return;
-        }
-        if (originalList == null || Object.keys(originalList).length == 0) {
-            alert("请先选择需要拷贝的文件！");
-            return;
-        }
-        if (extName == null || extName == "") {
-            alert("扩展名不能为空！");
-            return;
-        }
-        let newName = newNameInput.value;
-        if (newName == null || newName == "") {
-            alert("文件名不能为空！");
-            return;
-        }
-        newList = {};
-        let exist = false;
-        for (i in originalList) {
-            newList[i] = Path.join(projectRootPath.toString(), Common.SUB_PATH + i, newName + extName);
-            if (fs.existsSync(newList[i])) exist = true;
-        }
-        if (exist) {
-            let result = confirm('Android 项目中已存在相同命名文件，是否全部替换');
-            if (result) copyOrRewrite(newList);
-        } else {
-            copyOrRewrite(newList);
-        }
-    }
+						let newName = newNameInput.value;
+						if (newName == null || newName == "") {
+							newName = originalName.replace(extName, "");
+						}
 
-    function copyOrRewrite(newList) {
-        for (i in originalList) {
-            try {
-                fs.writeFileSync(newList[i], fs.readFileSync(originalList[i]));
+						newList = {};
+						let exist = false;
+						for (i in checkedDpiList) {
+							newList[checkedDpiList[i]] = Path.join(
+								projectResPath.toString(),
+								Common.DIR_PREFIX_MIPMAP + night + checkedDpiList[i],
+								newName + extName);
+							if (fs.existsSync(newList[checkedDpiList[i]])) exist = true;
+						}
+						if (exist) {
+							let result = confirm('Android 项目中已存在相同命名文件，是否全部替换');
+							if (result) copyOrRewrite(newList);
+						} else {
+							copyOrRewrite(newList);
+						}
+					}
 
-                var html = commitResultText.innerHTML;
-                html += "拷贝成功：" + newList[i] + "<br><br>";
-                commitResultText.innerHTML = html;
-            } catch (err) {
-                alert(err.toString());
-                return;
-            }
-        }
-        execGitAdd();
-    }
+					function copyOrRewrite(newList) {
+						debugger;
+						for (i in newList) {
+							try {
+								fs.writeFileSync(newList[i], fs.readFileSync(originalList[i]));
 
-    function execGitAdd() {
-        var shellStr = 'cd ' + projectResPath + ' && git add *';
-        exec(shellStr, function (err, stdout, stderr) {
-            var resStr = '';
-            if (err) {
-                resStr = "Git Add * 执行失败，" + err.toString();
-            } else {
-                resStr = 'Git Add * 执行成功。';
-            }
-            var html = commitResultText.innerHTML;
-            html += resStr;
-            commitResultText.innerHTML = html;
-        });
-    }
+								var html = commitResultP.innerHTML;
+								html += "拷贝成功：" + newList[i] + "<br><br>";
+								commitResultP.innerHTML = html;
+							} catch (err) {
+								alert(err.toString());
+								return;
+							}
+						}
 
-</script>
-</body>
+						if (gitaddCb.checked) {
+							execGitAdd();
+                        }
+					}
+
+					function execGitAdd() {
+						var shellStr = 'cd ' + projectResPath + ' && git add *';
+						exec(shellStr, function (err, stdout, stderr) {
+							var resStr = '';
+							if (err) {
+								resStr = "Git Add * 执行失败，" + err.toString();
+							} else {
+								resStr = 'Git Add * 执行成功。';
+							}
+							var html = commitResultP.innerHTML;
+							html += resStr;
+							commitResultP.innerHTML = html;
+						});
+					}
+
+        </script>
+    </body>
 
 </html>
