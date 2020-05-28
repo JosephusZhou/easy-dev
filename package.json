@@ -1,6 +1,6 @@
 {
   "name": "easy-dev",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A dev tool which can simplify operation for Android developer~",
   "main": "src/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "build": {
     "productName": "EasyDev",
     "asar": true,
-    "appId": "top.losttime.easydev",
+    "appId": "com.josephuszhou.easydev",
     "directories": {
       "output": "dist"
     }
@@ -31,12 +31,13 @@
   },
   "homepage": "https://github.com/JosephusZhou/easy-dev",
   "dependencies": {
-    "jsqr": "^1.2.0",
+    "antd": "^4.2.5",
+    "jsqr": "^1.3.1",
     "nconf": "^0.10.0"
   },
   "devDependencies": {
-    "asar": "^2.0.1",
-    "electron": "^5.0.6",
-    "electron-builder": "^21.0.15"
+    "asar": "^2.1.0",
+    "electron": "^9.0.0",
+    "electron-builder": "^22.6.1"
   }
 }
