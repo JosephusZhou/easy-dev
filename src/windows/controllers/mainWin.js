@@ -40,7 +40,7 @@ class MainWindow {
     });
     this.browserWindow.once('ready-to-show', () => {
       this.browserWindow.show();
-      this.browserWindow.webContents.openDevTools({mode:'undocked'});
+      //this.browserWindow.webContents.openDevTools({mode:'undocked'});
     });
   }
 

@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron src/index.js",
-    "build-osx": "electron-builder build --mac"
+    "build-osx": "electron-builder build --mac",
+    "build-win": "electron-builder build --windows"
   },
   "build": {
     "productName": "EasyDev",
