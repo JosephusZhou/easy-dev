@@ -11,9 +11,14 @@
 [![Build Status](https://img.shields.io/github/forks/JosephusZhou/easy-dev.svg)](https://github.com/JosephusZhou/easy-dev)
 
 ![Example](https://github.com/JosephusZhou/easy-dev/blob/master/images/demo.png)
+![Example2](https://github.com/JosephusZhou/easy-dev/blob/master/images/demo-qrcode.png)
 
 ## Change logs
 
+* 0.1.0
+    * Update Electron Version
+    * Add more functions
+    * Rewrite UI with bulma.css
 * 0.0.4
     * Update Electron Version
     * Add the function for QrCode decode
@@ -42,6 +47,8 @@ git clone https://github.com/JosephusZhou/easy-dev.git
 cd easy-dev
 # Install dependencies and run the app
 npm install && npm start
+# If you are in mainland China, please use the follow command to install dependencies and run the app
+ELECTRON_MIRROR="https://cdn.npm.taobao.org/dist/electron/" npm install && npm start
 ```
 
 To pack into an app, simply type one of these:
