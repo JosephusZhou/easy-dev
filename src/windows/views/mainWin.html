@@ -158,6 +158,27 @@
 						if (projectResPath != null && projectResPath != "") {
 							projectPathSpan.innerHTML = projectResPath;
 						}
+						if (AppConfig.readSettings(Common.CONIFG_INIT)) {
+                            mCb.checked = AppConfig.readSettings(Common.CONFIG_MDPI);
+                            hCb.checked = AppConfig.readSettings(Common.CONFIG_HDPI);
+                            xhCb.checked = AppConfig.readSettings(Common.CONFIG_XHDPI);
+                            xxhCb.checked = AppConfig.readSettings(Common.CONFIG_XXHDPI);
+                            xxxhCb.checked = AppConfig.readSettings(Common.CONFIG_XXXHDPI);
+                            gitaddCb.checked = AppConfig.readSettings(Common.CONFIG_GITADD);
+                            let savedPrefix = AppConfig.readSettings(Common.CONFIG_PATH_PREFIX);
+                            if (savedPrefix >= 0 && savedPrefix <= 2) {
+	                            rdList[savedPrefix].checked = true;
+                            }
+                        } else {
+							AppConfig.saveSettings(Common.CONIFG_INIT, true);
+                            AppConfig.saveSettings(Common.CONFIG_MDPI, false);
+                            AppConfig.saveSettings(Common.CONFIG_HDPI, false);
+                            AppConfig.saveSettings(Common.CONFIG_XHDPI, true);
+                            AppConfig.saveSettings(Common.CONFIG_XXHDPI, true);
+                            AppConfig.saveSettings(Common.CONFIG_XXXHDPI, true);
+                            AppConfig.saveSettings(Common.CONFIG_GITADD, true);
+                            AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 0);
+                        }
 					}
 
 					function setListeners() {
@@ -173,6 +194,42 @@
 								return;
 							});
 						});
+
+						mCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_MDPI, mCb.checked);
+                        });
+
+						hCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_HDPI, hCb.checked);
+                        });
+
+						xhCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_XHDPI, xhCb.checked);
+                        });
+
+						xxhCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_XXHDPI, xxhCb.checked);
+                        });
+
+						xxxhCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_XXXHDPI, xxxhCb.checked);
+                        });
+
+						gitaddCb.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_GITADD, gitaddCb.checked);
+                        });
+
+						noRd.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 0);
+                        });
+
+						nightRd.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 1);
+                        });
+
+						notnightRd.addEventListener('click', (event) => {
+							AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 2);
+                        });
 
 						fileHolderDiv.ondragover = () => {
 							return false;
