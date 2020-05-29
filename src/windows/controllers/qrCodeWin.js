@@ -11,8 +11,8 @@ class QrCodeWindow {
 
   createQrCodeWindow() {
     this.browserWindow = new BrowserWindow({
-      width: 1000,
-      height: 800,
+      width: 800,
+      height: 400,
       resizable: true,
       fullscreenable: false,
       show: false,

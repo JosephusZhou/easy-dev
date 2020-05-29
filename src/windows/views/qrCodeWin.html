@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 
-<head>
-    <link href="../styles/qrCodeWin.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <title>Easy Dev-Parse QrCode</title>
-</head>
+    <head>
+        <link rel="stylesheet" href="../styles/qrCodeWin.css">
+        <link rel="stylesheet" href="../styles/bulma.0.8.2.min.css">
+        <script defer src="../js/fontawesome.5.3.1.all.js"></script>
+        <meta charset="UTF-8">
+        <title>解析二维码</title>
+    </head>
 
-<body class="page">
-<div class="main-content">
-    <section>
-        <ul>
-            <li class="li-title">
-                <h2>解析二维码</h2>
-                将图片复制到剪贴板，点击按钮进行解析
-            </li>
-            <li class="li-content">
-                <button id="parse-btn" class="btn">解析</button>
-                <p id="parse-text"></p>
-                <img id="parse-img" />
-            </li>
-        </ul>
-    </section>
-</div>
+    <body>
+        <section class="section">
+            <div class="container">
+                <h1 class="title is-4">解析二维码</h1>
+                <h2 class="subtitle is-6">将图片复制到剪贴板，点击按钮进行解析</h2>
+                <button class="button is-primary" id="parse-btn">解析</button>
+                <br>
+                <span class="content" id="parse-text"></span>
+                <br>
+                <img id="parse-img"/>
+            </div>
+            <br>
+        </section>
 
-<script>
-    const {clipboard} = require('electron').remote;
-    const jsQR = require('jsqr');
+        <script>
+					const {clipboard} = require('electron').remote;
+					const jsQR = require('jsqr');
 
-    const parseButton = $('parse-btn');
-    const parseText = $('parse-text');
-    const parseImg = $('parse-img');
+					const parseButton = $('parse-btn');
+					const parseText = $('parse-text');
+					const parseImg = $('parse-img');
 
-    function $(id) {
-        return document.getElementById(id);
-    }
+					function $(id) {
+						return document.getElementById(id);
+					}
 
-    setListeners();
+					setListeners();
 
-    function setListeners() {
-	    parseButton.addEventListener('click', (event) => {
-            let image = clipboard.readImage();
-            if (!image.isEmpty()) {
-	            parseImg.src = image.toDataURL();
-	            let code = jsQR(image.getBitmap(), image.getSize().width, image.getSize().height);
-	            if (code) {
-                    parseText.innerHTML = code.data;
-                } else {
-                    parseText.innerHTML = "无效二维码";
-                }
-            }
-	    });
-    }
+					function setListeners() {
+						parseButton.addEventListener('click', (event) => {
+							let image = clipboard.readImage();
+							if (!image.isEmpty()) {
+								parseImg.src = image.toDataURL();
+								let code = jsQR(image.getBitmap(), image.getSize().width, image.getSize().height);
+								if (code) {
+									parseText.innerHTML = code.data;
+								} else {
+									parseText.innerHTML = "无效二维码";
+								}
+							}
+						});
+					}
 
-</script>
-</body>
+        </script>
+    </body>
 
 </html>
