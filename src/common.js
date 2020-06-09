@@ -13,12 +13,15 @@ Common.CONFIG_XXHDPI = "project-xxhdpi";
 Common.CONFIG_XXXHDPI = "project-xxxhdpi";
 Common.CONFIG_GITADD = "project-git-add";
 Common.CONFIG_PATH_PREFIX = "project-path-prefix";
+Common.CONFIG_LANGUAGE_PREFIX = "project-language-prefix";
 
 Common.DIR_PREFIX_MIPMAP = 'mipmap-';
 
 Common.NIGHT = "night-";
-
 Common.NOTNIGHT = "notnight-";
+
+Common.EN = "en-";
+Common.ZHRTW = "zh-rTW-";
 
 Common.MDPI = 'mdpi';
 Common.HDPI = 'hdpi';

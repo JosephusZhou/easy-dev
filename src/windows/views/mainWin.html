@@ -53,7 +53,7 @@
                         <br>
                     </div>
                     <div class="column">
-                        <p class="tag is-primary">选择目标资源目录前缀</p>
+                        <p class="tag is-primary">选择日夜间模式前缀</p>
                         <br>
                         <div class="control">
                             <label class="radio">
@@ -69,6 +69,27 @@
                             <label class="radio">
                                 <input id="rd-notnight" type="radio" name="answer" />
                                 notnight
+                            </label>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <p class="tag is-primary">选择多语言前缀</p>
+                        <br>
+                        <div class="control">
+                            <label class="radio">
+                                <input id="rd-no-language" type="radio" name="language" checked="checked">
+                                无
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input id="rd-en" type="radio" name="language">
+                                en
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input id="rd-zh-rtw" type="radio" name="language" />
+                                zh-rTW
                             </label>
                             <br>
                         </div>
@@ -127,6 +148,9 @@
 					const noRd = $('rd-no');
 					const nightRd = $('rd-night');
 					const notnightRd = $('rd-notnight');
+					const noLanguageRd = $('rd-no-language');
+					const enRd = $('rd-en');
+					const zhrtwRd = $('rd-zh-rtw');
 					const gitaddCb = $('cb-gitadd');
 					const fileHolderDiv = $('div-file-holder');
 					const fileMessageDiv = $("div-file-message");
@@ -136,9 +160,11 @@
 					const commitResultP = $("p-commit-result");
 					let checkedList = [mCb, hCb, xhCb, xxhCb, xxxhCb];
 					let rdList = [noRd, nightRd, notnightRd];
+					let rdLanguageList = [noLanguageRd, enRd, zhrtwRd];
 
 					const dpiList = [Common.MDPI, Common.HDPI, Common.XHDPI, Common.XXHDPI, Common.XXXHDPI];
 					const nightList = ['', Common.NIGHT, Common.NOTNIGHT];
+					const languageList = ['', Common.EN, Common.ZHRTW];
 					// 项目根目录路径
 					let projectResPath = AppConfig.readSettings(Common.CONFIG_PATH);
 					// 待处理的资源文件列表
@@ -166,8 +192,12 @@
                             xxxhCb.checked = AppConfig.readSettings(Common.CONFIG_XXXHDPI);
                             gitaddCb.checked = AppConfig.readSettings(Common.CONFIG_GITADD);
                             let savedPrefix = AppConfig.readSettings(Common.CONFIG_PATH_PREFIX);
-                            if (savedPrefix >= 0 && savedPrefix <= 2) {
+                            if (savedPrefix && savedPrefix >= 0 && savedPrefix <= 2) {
 	                            rdList[savedPrefix].checked = true;
+                            }
+                            let languagePrefix = AppConfig.readSettings(Common.CONFIG_LANGUAGE_PREFIX);
+                            if (languagePrefix >= 0 && languagePrefix <= 2) {
+                                rdLanguageList[languagePrefix].checked = true;
                             }
                         } else {
 							AppConfig.saveSettings(Common.CONIFG_INIT, true);
@@ -178,6 +208,7 @@
                             AppConfig.saveSettings(Common.CONFIG_XXXHDPI, true);
                             AppConfig.saveSettings(Common.CONFIG_GITADD, true);
                             AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 0);
+                            AppConfig.saveSettings(Common.CONFIG_LANGUAGE_PREFIX, 0);
                         }
 					}
 
@@ -229,6 +260,18 @@
 
 						notnightRd.addEventListener('click', (event) => {
 							AppConfig.saveSettings(Common.CONFIG_PATH_PREFIX, 2);
+                        });
+
+                        noLanguageRd.addEventListener('click', (event) => {
+                            AppConfig.saveSettings(Common.CONFIG_LANGUAGE_PREFIX, 0);
+                        });
+
+                        enRd.addEventListener('click', (event) => {
+                            AppConfig.saveSettings(Common.CONFIG_LANGUAGE_PREFIX, 1);
+                        });
+
+                        zhrtwRd.addEventListener('click', (event) => {
+                            AppConfig.saveSettings(Common.CONFIG_LANGUAGE_PREFIX, 2);
                         });
 
 						fileHolderDiv.ondragover = () => {
@@ -323,6 +366,14 @@
 							}
 						}
 
+                        let language = '';
+                        for (let i in rdLanguageList) {
+                            if (rdLanguageList[i].checked) {
+	                            language = languageList[i];
+                                break;
+                            }
+                        }
+
 						let newName = newNameInput.value;
 						if (newName == null || newName == "") {
 							newName = originalName.replace(extName, "");
@@ -333,7 +384,7 @@
 						for (i in checkedDpiList) {
 							newList[checkedDpiList[i]] = Path.join(
 								projectResPath.toString(),
-								Common.DIR_PREFIX_MIPMAP + night + checkedDpiList[i],
+								Common.DIR_PREFIX_MIPMAP + language + night + checkedDpiList[i],
 								newName + extName);
 							if (fs.existsSync(newList[checkedDpiList[i]])) exist = true;
 						}
