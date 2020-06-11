@@ -15,6 +15,8 @@
 
 ## Change logs
 
+* 0.1.1
+    * Add multiple language options
 * 0.1.0
     * Update Electron Version
     * Add more functions
