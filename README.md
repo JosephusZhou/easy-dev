@@ -2,6 +2,10 @@
 
 # Easy Dev
 
+**Deprecated!!!**
+
+**Please use [haha_tools](https://github.com/JosephusZhou/haha_tools)**
+
 *A dev tool which can simplify operation for Android developer. Built with [Electron](https://github.com/atom/electron).*
 
 
